@@ -1,11 +1,58 @@
+import { useState } from 'react'
 import PokemonCard from './PokemonCard'
 
+const POKEMONS = [
+  {
+    id: 25,
+    name: 'Pikachu',
+    type: 'Elétrico',
+    imageUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+  },
+  {
+    id: 1,
+    name: 'Bulbasaur',
+    type: 'Grama / Veneno',
+    imageUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+  },
+]
+
 function PokemonList() {
+  const [pokemons] = useState(POKEMONS)
+  const [filtro, setFiltro] = useState('')
+
+  const listaFiltrada = pokemons.filter((p) =>
+    p.name.toLowerCase().includes(filtro.toLowerCase())
+  )
+
+
   return (
     <section>
-      <PokemonCard />
-      <PokemonCard />
-      <PokemonCard />
+      <label htmlFor="busca">Buscar por nome: </label>
+      <p>Mostrando {listaFiltrada.length} Pokémons(s)</p>
+
+      <input
+        id="busca"
+        type="search"
+        value={filtro}
+        onChange={(e) => setFiltro(e.target.value)}
+        placeholder="Ex.: char"
+      />
+
+      {listaFiltrada.length === 0 ? (
+        <p style={{ color:"red" }}>Nenhum Pokémon encontrado para esta busca.</p>
+      ) : (
+      listaFiltrada.map((pokemon) => (
+        <PokemonCard
+          key={pokemon.id}
+          id={pokemon.id}
+          name={pokemon.name}
+          type={pokemon.type}
+          imageUrl={pokemon.imageUrl}
+        />
+      ))
+      )}
     </section>
   )
 }
